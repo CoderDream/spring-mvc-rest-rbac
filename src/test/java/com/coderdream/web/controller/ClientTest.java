@@ -39,7 +39,7 @@ public class ClientTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testServiceHelloSuccess() {
-		String username = "admin";
+		String username = "zhang";
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 		params.add("username", username);
 
@@ -55,14 +55,14 @@ public class ClientTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testServiceHelloSuccess_00() {
-		String username = "admin";
+		String username = "zhang";
 		String url = UriComponentsBuilder
 				.fromHttpUrl("http://localhost:8080/rest/getPermissions/" + username)
 				.build().toUriString();
 
 		ResponseEntity responseEntity = restTemplate.getForEntity(url,
 				String.class);
-		Assert.assertEquals("user:*urlFilter:*role:*resource:*organization:*", responseEntity.getBody());
+		Assert.assertEquals("[\"user:create\",\"user:update\",\"menu:create\"]", responseEntity.getBody());
 	}
 	
 	@SuppressWarnings("rawtypes")

@@ -2,35 +2,34 @@ package com.coderdream.service;
 
 import com.coderdream.entity.Role;
 
-import java.util.List;
-import java.util.Set;
-
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 14-1-28
- * <p>Version: 1.0
+ * <p>
+ * User: Zhang Kaitao
+ * <p>
+ * Date: 14-1-28
+ * <p>
+ * Version: 1.0
  */
 public interface RoleService {
 
+	public Role createRole(Role role);
 
-    public Role createRole(Role role);
-    public Role updateRole(Role role);
-    public void deleteRole(Long roleId);
+	public void deleteRole(Long roleId);
 
-    public Role findOne(Long roleId);
-    public List<Role> findAll();
+	/**
+	 * 添加角色-权限之间关系
+	 * 
+	 * @param roleId
+	 * @param permissionIds
+	 */
+	public void correlationPermissions(Long roleId, Long... permissionIds);
 
-    /**
-     * 根据角色编号得到角色标识符列表
-     * @param roleIds
-     * @return
-     */
-    Set<String> findRoles(Long... roleIds);
+	/**
+	 * 移除角色-权限之间关系
+	 * 
+	 * @param roleId
+	 * @param permissionIds
+	 */
+	public void uncorrelationPermissions(Long roleId, Long... permissionIds);
 
-    /**
-     * 根据角色编号得到权限字符串列表
-     * @param roleIds
-     * @return
-     */
-    Set<String> findPermissions(Long[] roleIds);
 }

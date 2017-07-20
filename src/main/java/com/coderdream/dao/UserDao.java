@@ -1,24 +1,34 @@
 package com.coderdream.dao;
 
-import java.util.List;
-
 import com.coderdream.entity.User;
 
+import java.util.Set;
+
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 14-1-28
- * <p>Version: 1.0
+ * <p>
+ * User: Zhang Kaitao
+ * <p>
+ * Date: 14-1-28
+ * <p>
+ * Version: 1.0
  */
 public interface UserDao {
 
-    public User createUser(User user);
-    public User updateUser(User user);
-    public void deleteUser(Long userId);
+	public User createUser(User user);
 
-    User findOne(Long userId);
+	public void updateUser(User user);
 
-    List<User> findAll();
+	public void deleteUser(Long userId);
 
-    User findByUsername(String username);
+	public void correlationRoles(Long userId, Long... roleIds);
 
+	public void uncorrelationRoles(Long userId, Long... roleIds);
+
+	User findOne(Long userId);
+
+	User findByUsername(String username);
+
+	Set<String> findRoles(String username);
+
+	Set<String> findPermissions(String username);
 }
