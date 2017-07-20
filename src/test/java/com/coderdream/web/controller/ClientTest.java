@@ -21,21 +21,21 @@ import junit.framework.Assert;
 public class ClientTest {
 	private RestTemplate restTemplate = new RestTemplate();
 
-//	@BeforeClass
-//	public static void beforeClass() throws Exception {
-//		// 创建一个server
-//		// server = new Server(8080);
-//		// WebAppContext context = new WebAppContext();
-//		// String webapp = "shiro-example-chapter20/src/main/webapp";
-//		// context.setDescriptor(webapp + "/WEB-INF/web.xml"); // 指定web.xml配置文件
-//		// context.setResourceBase(webapp); // 指定webapp目录
-//		// context.setContextPath("/");
-//		// context.setParentLoaderPriority(true);
-//		//
-//		// server.setHandler(context);
-//		// server.start();
-//	}
-//
+	// @BeforeClass
+	// public static void beforeClass() throws Exception {
+	// // 创建一个server
+	// // server = new Server(8080);
+	// // WebAppContext context = new WebAppContext();
+	// // String webapp = "shiro-example-chapter20/src/main/webapp";
+	// // context.setDescriptor(webapp + "/WEB-INF/web.xml"); // 指定web.xml配置文件
+	// // context.setResourceBase(webapp); // 指定webapp目录
+	// // context.setContextPath("/");
+	// // context.setParentLoaderPriority(true);
+	// //
+	// // server.setHandler(context);
+	// // server.start();
+	// }
+	//
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testServiceHelloSuccess() {
@@ -51,20 +51,26 @@ public class ClientTest {
 				String.class);
 		Assert.assertEquals("hello", responseEntity.getBody());
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testServiceHelloSuccess_00() {
-		String username = "zhang";
+		String username = "admin";
 		String url = UriComponentsBuilder
-				.fromHttpUrl("http://localhost:8080/rest/getPermissions/" + username)
+				.fromHttpUrl(
+						"http://localhost:8080/rest/getPermissions/" + username)
 				.build().toUriString();
 
 		ResponseEntity responseEntity = restTemplate.getForEntity(url,
 				String.class);
-		Assert.assertEquals("[\"user:create\",\"user:update\",\"menu:create\"]", responseEntity.getBody());
+		// Assert.assertEquals("[\"user:create\",\"user:update\",\"menu:create\"]",
+		// responseEntity.getBody());
+		Assert.assertEquals(
+				"[\"user:*\",\"role:*\",\"resource:*\",\"session:*\",\"organization:*\"]",
+				responseEntity.getBody());
+
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testServiceHelloSuccess_01() {
@@ -110,7 +116,8 @@ public class ClientTest {
 
 		ResponseEntity responseEntity = restTemplate.getForEntity(url,
 				String.class);
-		Assert.assertEquals("{\"msg\":\"you say:'admin'\"}", responseEntity.getBody());
+		Assert.assertEquals("{\"msg\":\"you say:'admin'\"}",
+				responseEntity.getBody());
 	}
 
 }

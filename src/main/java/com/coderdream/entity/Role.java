@@ -1,6 +1,11 @@
 package com.coderdream.entity;
 
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>User: Zhang Kaitao
@@ -8,11 +13,10 @@ import java.io.Serializable;
  * <p>Version: 1.0
  */
 public class Role implements Serializable {
-    /** */
-	private static final long serialVersionUID = -2661665431896648405L;
-	private Long id;
+    private Long id; //编号
     private String role; //角色标识 程序中判断使用,如"admin"
     private String description; //角色描述,UI界面显示使用
+    private List<Long> resourceIds; //拥有的资源
     private Boolean available = Boolean.FALSE; //是否可用,如果不可用将不会添加给用户
 
     public Role() {
@@ -48,6 +52,42 @@ public class Role implements Serializable {
         this.description = description;
     }
 
+    public List<Long> getResourceIds() {
+        if(resourceIds == null) {
+            resourceIds = new ArrayList<Long>();
+        }
+        return resourceIds;
+    }
+
+    public void setResourceIds(List<Long> resourceIds) {
+        this.resourceIds = resourceIds;
+    }
+
+    public String getResourceIdsStr() {
+        if(CollectionUtils.isEmpty(resourceIds)) {
+            return "";
+        }
+        StringBuilder s = new StringBuilder();
+        for(Long resourceId : resourceIds) {
+            s.append(resourceId);
+            s.append(",");
+        }
+        return s.toString();
+    }
+
+    public void setResourceIdsStr(String resourceIdsStr) {
+        if(StringUtils.isEmpty(resourceIdsStr)) {
+            return;
+        }
+        String[] resourceIdStrs = resourceIdsStr.split(",");
+        for(String resourceIdStr : resourceIdStrs) {
+            if(StringUtils.isEmpty(resourceIdStr)) {
+                continue;
+            }
+            getResourceIds().add(Long.valueOf(resourceIdStr));
+        }
+    }
+
     public Boolean getAvailable() {
         return available;
     }
@@ -79,6 +119,7 @@ public class Role implements Serializable {
                 "id=" + id +
                 ", role='" + role + '\'' +
                 ", description='" + description + '\'' +
+                ", resourceIds=" + resourceIds +
                 ", available=" + available +
                 '}';
     }

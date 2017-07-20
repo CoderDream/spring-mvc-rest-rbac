@@ -44,7 +44,7 @@ public class RestController {
 
 	@RequestMapping(value = "/getPermission", produces = "application/json;charset=UTF-8", method = RequestMethod.GET)
 	public @ResponseBody String getPermission(String username) {
-		Set<String> permissions = userService.findPermissions(username);
+		//Set<String> permissions = userService.findPermissions(username);
 		// List<Resource> menus = resourceService.findMenus(permissions);
 		// model.addAttribute("menus", menus);
 		// return "index";

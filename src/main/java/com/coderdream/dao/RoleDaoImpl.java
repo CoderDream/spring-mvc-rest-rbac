@@ -1,20 +1,21 @@
 package com.coderdream.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
+import com.coderdream.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.coderdream.entity.Role;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * <p>
- * User: Zhang Kaitao
+ * Role: Zhang Kaitao
  * <p>
  * Date: 14-1-28
  * <p>
@@ -23,11 +24,11 @@ import com.coderdream.entity.Role;
 @Repository
 public class RoleDaoImpl implements RoleDao {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    
-	public Role createRole(final Role Role) {
-		final String sql = "insert into sys_roles(role, description, available) values(?,?,?)";
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+	public Role createRole(final Role role) {
+		final String sql = "insert into sys_role(role, description, resource_ids, available) values(?,?,?,?)";
 
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -36,56 +37,46 @@ public class RoleDaoImpl implements RoleDao {
 					Connection connection) throws SQLException {
 				PreparedStatement psst = connection.prepareStatement(sql,
 						new String[] { "id" });
-				psst.setString(1, Role.getRole());
-				psst.setString(2, Role.getDescription());
-				psst.setBoolean(3, Role.getAvailable());
+				int count = 1;
+				psst.setString(count++, role.getRole());
+				psst.setString(count++, role.getDescription());
+				psst.setString(count++, role.getResourceIdsStr());
+				psst.setBoolean(count++, role.getAvailable());
 				return psst;
 			}
 		}, keyHolder);
-		Role.setId(keyHolder.getKey().longValue());
+		role.setId(keyHolder.getKey().longValue());
+		return role;
+	}
 
-		return Role;
+	@Override
+	public Role updateRole(Role role) {
+		final String sql = "update sys_role set role=?, description=?, resource_ids=?, available=? where id=?";
+		jdbcTemplate.update(sql, role.getRole(), role.getDescription(),
+				role.getResourceIdsStr(), role.getAvailable(), role.getId());
+		return role;
 	}
 
 	public void deleteRole(Long roleId) {
-		// 首先把和role关联的相关表数据删掉
-		String sql = "delete from sys_users_roles where role_id=?";
-		jdbcTemplate.update(sql, roleId);
-
-		sql = "delete from sys_roles where id=?";
+		final String sql = "delete from sys_role where id=?";
 		jdbcTemplate.update(sql, roleId);
 	}
 
 	@Override
-	public void correlationPermissions(Long roleId, Long... permissionIds) {
-		if (permissionIds == null || permissionIds.length == 0) {
-			return;
+	public Role findOne(Long roleId) {
+		final String sql = "select id, role, description, resource_ids as resourceIdsStr, available from sys_role where id=?";
+		List<Role> roleList = jdbcTemplate.query(sql,
+				new BeanPropertyRowMapper(Role.class), roleId);
+		if (roleList.size() == 0) {
+			return null;
 		}
-		String sql = "insert into sys_roles_permissions(role_id, permission_id) values(?,?)";
-		for (Long permissionId : permissionIds) {
-			if (!exists(roleId, permissionId)) {
-				jdbcTemplate.update(sql, roleId, permissionId);
-			}
-		}
+		return roleList.get(0);
 	}
 
 	@Override
-	public void uncorrelationPermissions(Long roleId, Long... permissionIds) {
-		if (permissionIds == null || permissionIds.length == 0) {
-			return;
-		}
-		String sql = "delete from sys_roles_permissions where role_id=? and permission_id=?";
-		for (Long permissionId : permissionIds) {
-			if (exists(roleId, permissionId)) {
-				jdbcTemplate.update(sql, roleId, permissionId);
-			}
-		}
-	}
-
-	private boolean exists(Long roleId, Long permissionId) {
-		String sql = "select count(1) from sys_roles_permissions where role_id=? and permission_id=?";
-		return jdbcTemplate.queryForObject(sql, Integer.class, roleId,
-				permissionId) != 0;
+	public List<Role> findAll() {
+		final String sql = "select id, role, description, resource_ids as resourceIdsStr, available from sys_role";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper(Role.class));
 	}
 
 }
