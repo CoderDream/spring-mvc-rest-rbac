@@ -1,18 +1,64 @@
 package com.coderdream.web.controller;
 
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.coderdream.service.ResourceService;
+import com.coderdream.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Controller
 @RequestMapping("/rest")
 public class RestController {
 
+	@Autowired
+	private ResourceService resourceService;
+
+	@Autowired
+	private UserService userService;
+
+	@RequestMapping(value = "/getPermissions/{username}", produces = "application/json;charset=UTF-8", method = RequestMethod.GET)
+	public @ResponseBody String getPermissions(
+			@PathVariable(value = "username") String username) {
+		StringBuffer stringBuffer = new StringBuffer();
+		Set<String> permissions = userService.findPermissions(username);
+		for (String string : permissions) {
+			stringBuffer.append(string);
+		}
+		// List<Resource> menus = resourceService.findMenus(permissions);
+		// model.addAttribute("menus", menus);
+		// return "index";
+
+		// return stringBuffer.toString();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writeValueAsString(permissions);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/getPermission", produces = "application/json;charset=UTF-8", method = RequestMethod.GET)
+	public @ResponseBody String getPermission(String username) {
+		Set<String> permissions = userService.findPermissions(username);
+		// List<Resource> menus = resourceService.findMenus(permissions);
+		// model.addAttribute("menus", menus);
+		// return "index";
+
+		return "permissions";
+	}
+
 	/** 日志实例 */
-//	private static final Logger logger = LoggerFactory
-//			.getLogger(RestController.class);
+	// private static final Logger logger = LoggerFactory
+	// .getLogger(RestController.class);
 
 	@RequestMapping(value = "/hello", produces = "text/plain;charset=UTF-8")
 	public @ResponseBody String hello() {
@@ -21,7 +67,7 @@ public class RestController {
 
 	@RequestMapping(value = "/say/{msg}", produces = "application/json;charset=UTF-8")
 	public @ResponseBody String say(@PathVariable(value = "msg") String msg) {
-//		logger.debug("msg {}", msg);
+		// logger.debug("msg {}", msg);
 		return "{\"msg\":\"you say:'" + msg + "'\"}";
 	}
 
