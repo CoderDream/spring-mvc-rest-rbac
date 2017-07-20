@@ -1,0 +1,5 @@
+INSERT INTO `sys_user` (`id`, `organization_id`, `username`, `password`, `salt`, `role_ids`, `locked`) VALUES (1, 1, 'admin', 'd3c59d25033dbf980d29554025c23a75', '8d78869f470951332959580424d4bf4f', '1', 0);
+INSERT INTO `sys_user` (`id`, `organization_id`, `username`, `password`, `salt`, `role_ids`, `locked`) VALUES (2, 1, 'B-28709', 'd3c59d25033dbf980d29554025c23a75', '8d78869f470951332959580424d4bf4f', '2', 0);
+INSERT INTO `sys_user` (`id`, `organization_id`, `username`, `password`, `salt`, `role_ids`, `locked`) VALUES (3, 1, 'B-26050', 'd3c59d25033dbf980d29554025c23a75', '8d78869f470951332959580424d4bf4f', '3', 0);
+INSERT INTO `sys_user` (`id`, `organization_id`, `username`, `password`, `salt`, `role_ids`, `locked`) VALUES (4, 1, 'B-22341', 'd3c59d25033dbf980d29554025c23a75', '8d78869f470951332959580424d4bf4f', '4', 0);
+INSERT INTO `sys_user` (`id`, `organization_id`, `username`, `password`, `salt`, `role_ids`, `locked`) VALUES (5, 1, 'B-26026', 'd3c59d25033dbf980d29554025c23a75', '8d78869f470951332959580424d4bf4f', '5', 0);

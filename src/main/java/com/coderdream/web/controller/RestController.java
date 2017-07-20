@@ -1,6 +1,7 @@
 package com.coderdream.web.controller;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,11 +29,7 @@ public class RestController {
 		for (String string : permissions) {
 			stringBuffer.append(string);
 		}
-		// List<Resource> menus = resourceService.findMenus(permissions);
-		// model.addAttribute("menus", menus);
-		// return "index";
 
-		// return stringBuffer.toString();
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			return mapper.writeValueAsString(permissions);
@@ -42,9 +39,22 @@ public class RestController {
 		}
 	}
 
+	@RequestMapping(value = "/findResourceIds/{username}", produces = "application/json;charset=UTF-8", method = RequestMethod.GET)
+	public @ResponseBody String findResourceIds(
+			@PathVariable(value = "username") String username) {
+		Set<Long> resourceIds = userService.findResourceIds(username);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writeValueAsString(resourceIds);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	@RequestMapping(value = "/getPermission", produces = "application/json;charset=UTF-8", method = RequestMethod.GET)
 	public @ResponseBody String getPermission(String username) {
-		//Set<String> permissions = userService.findPermissions(username);
+		// Set<String> permissions = userService.findPermissions(username);
 		// List<Resource> menus = resourceService.findMenus(permissions);
 		// model.addAttribute("menus", menus);
 		// return "index";

@@ -3,12 +3,11 @@ package com.coderdream.entity;
 import java.io.Serializable;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 14-1-28
- * <p>Version: 1.0
  */
 public class Resource implements Serializable {
-    private Long id; //编号
+    /** */
+	private static final long serialVersionUID = 2981037889663580076L;
+	private Long id; //编号
     private String name; //资源名称
     private ResourceType type = ResourceType.menu; //资源类型
     private String url; //资源路径
